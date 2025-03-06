@@ -2,6 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { Sky } from "three/addons/objects/Sky.js";
 import { Timer } from "three/addons/misc/Timer.js";
+import Stats from 'three/addons/libs/stats.module.js'
+//import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+//import { GUI } from 'dat.gui';
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 const scene = new THREE.Scene();
@@ -18,6 +21,8 @@ const worldBounds=[-1.0, 0.0, -1.0, 1.0, 2.0, 1.0];
 let pickingControls;
 let numSubsteps = 10;
 let mainObj;
+let stats;
+
 
 let balls;
 
@@ -273,6 +278,8 @@ class Balls {
 
     scene.add(this.visMesh);
 
+    console.log(this.numBalls);
+
     this.updateMesh();
   }
 
@@ -416,6 +423,8 @@ function awake() {
 
   document.getElementById("play").addEventListener("click", onPlayStop);
   document.getElementById("restart").addEventListener("click", onRestart);
+  stats=new Stats();
+  document.body.appendChild(stats.dom)
 }
 
 function start() {
@@ -428,7 +437,7 @@ function start() {
     azimuth: 135,
     exposure: renderer.toneMappingExposure,
   };
-
+  //var gui = new GUI();
   // Add Sky
   sky = new Sky();
   sky.scale.setScalar(4000);
@@ -474,7 +483,7 @@ function start() {
 
   //let body = new Cloths(scene, clothMesh);
   //mainObj = body;
-  var radius = 0.05;
+  var radius = 0.025;
 
   var spacing = 3.0 * radius;
   var velRand = 0.2;
@@ -536,6 +545,7 @@ function UpdateLoop(timestamp) {
   camControls.update();
   Update(1.0 / 60.0);
   renderer.render(scene, camera);
+  stats.update();
 }
 
 function main() {
